@@ -30,4 +30,7 @@ urlpatterns = [
     # Student URLs
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
     path('schedule/', views.view_schedule, name='view_schedule'),
+    
+    # API URLs
+    path('api/lessons-by-class/<int:class_id>/', views.get_lessons_by_class, name='get_lessons_by_class'),
 ] 

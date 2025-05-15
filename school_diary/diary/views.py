@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from django.urls import reverse
 from django.contrib.auth import logout as auth_logout
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 
 @login_required
 def login_redirect(request):
@@ -172,6 +173,29 @@ def create_student(request):
     return render(request, 'diary/admin/create_student.html', {
         'classes': classes
     })
+
+@login_required
+@user_passes_test(is_admin)
+def create_default_lessons(request):
+    subjects = Subject.objects.all()
+    created_count = 0
+    
+    for subject in subjects:
+        # Создаем базовый урок для каждого предмета
+        lesson_name = f"Урок по предмету {subject.name}"
+        if not Lesson.objects.filter(subject=subject).exists():
+            Lesson.objects.create(
+                name=lesson_name,
+                subject=subject,
+                description=f"Основной урок по предмету {subject.name}"
+            )
+            created_count += 1
+    
+    if created_count > 0:
+        messages.success(request, f'Создано {created_count} уроков!')
+    else:
+        messages.info(request, 'Все предметы уже имеют уроки.')
+    return redirect('admin_dashboard')
 
 # Teacher views
 @login_required
@@ -445,7 +469,9 @@ def teacher_homework_list(request):
     teacher = request.user.teacher
     homeworks = Homework.objects.filter(teacher=teacher).order_by('-due_date')
     classes = teacher.classes.all()
-    lessons = Lesson.objects.filter(subject__in=teacher.subjects.all())
+    # Получаем все уроки для предметов учителя
+    subjects = teacher.subjects.all()
+    lessons = Lesson.objects.filter(subject__in=subjects)
 
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -475,6 +501,32 @@ def teacher_homework_list(request):
         'lessons': lessons
     })
 
+@login_required
+@user_passes_test(is_teacher)
+def get_lessons_by_class(request, class_id):
+    teacher = request.user.teacher
+    class_group = get_object_or_404(Class, id=class_id)
+    
+    # Получаем предметы, которые учитель ведет в этом классе
+    subjects = Subject.objects.filter(
+        schedule__class_group=class_group,
+        schedule__teacher=teacher
+    ).distinct()
+    
+    # Получаем уроки для этих предметов
+    lessons = Lesson.objects.filter(subject__in=subjects)
+    
+    lessons_data = [
+        {
+            'id': lesson.id,
+            'name': lesson.name,
+            'subject_name': lesson.subject.name
+        }
+        for lesson in lessons
+    ]
+    
+    return JsonResponse({'lessons': lessons_data})
+
 # Student views
 @login_required
 @user_passes_test(is_student)
@@ -482,6 +534,12 @@ def student_dashboard(request):
     student = request.user.student
     grades = Grade.objects.filter(student=student).order_by('-date')[:10]  # Last 10 grades
     attendance_list = Attendance.objects.filter(student=student).order_by('-date')[:10]  # Last 10 attendance records
+    
+    # Получаем домашние задания для класса студента
+    homeworks = Homework.objects.filter(
+        class_group=student.class_group,
+        due_date__gte=datetime.now().date()  # Только актуальные задания
+    ).order_by('due_date')
     
     # Get current week's dates
     today = datetime.now()
@@ -527,7 +585,8 @@ def student_dashboard(request):
         'attendance_list': attendance_list,
         'weekly_schedule': weekly_schedule,
         'week_dates': week_dates,
-        'today': today.date()
+        'today': today.date(),
+        'homeworks': homeworks  # Добавляем домашние задания в контекст
     })
 
 @login_required

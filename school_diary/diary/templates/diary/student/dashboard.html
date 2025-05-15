@@ -6,6 +6,43 @@
 <div class="container mt-4">
     <h2 class="mb-4">Панель ученика</h2>
     
+    <!-- Homework Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="card-title">Домашние задания</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Предмет</th>
+                            <th>Тема</th>
+                            <th>Описание</th>
+                            <th>Срок сдачи</th>
+                            <th>Учитель</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hw in homeworks %}
+                            <tr>
+                                <td>{{ hw.lesson.subject.name }}</td>
+                                <td>{{ hw.title }}</td>
+                                <td>{{ hw.description|default:"-" }}</td>
+                                <td>{{ hw.due_date|date:"d.m.Y" }}</td>
+                                <td>{{ hw.teacher.user.get_full_name }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Нет актуальных домашних заданий</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Weekly Schedule -->
     <div class="card mb-4">
         <div class="card-header">
