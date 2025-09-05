@@ -26,7 +26,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label" for="class_group">Класс</label>
-                        <select class="form-select" id="class_group" name="class_group" required title="Выберите класс">
+                        <select class="form-select" id="class_group" name="class_group" required title="Выберите класс" onchange="updateLessons()">
                             <option value="">Выберите класс</option>
                             {% for class in classes %}
                                 <option value="{{ class.id }}">{{ class.name }} ({{ class.year }})</option>
@@ -36,10 +36,7 @@
                     <div class="col-md-4 mb-3">
                         <label class="form-label" for="lesson">Урок</label>
                         <select class="form-select" id="lesson" name="lesson" required title="Выберите урок">
-                            <option value="">Выберите урок</option>
-                            {% for lesson in lessons %}
-                                <option value="{{ lesson.id }}">{{ lesson.name }} ({{ lesson.subject.name }})</option>
-                            {% endfor %}
+                            <option value="">Сначала выберите класс</option>
                         </select>
                     </div>
                 </div>
@@ -94,4 +91,45 @@
         </div>
     </div>
 </div>
+
+<script>
+// Сохраняем все уроки в переменную
+const allLessons = [
+    {% for lesson in lessons %}
+        {
+            id: {{ lesson.id }},
+            name: "{{ lesson.name }}",
+            subject: "{{ lesson.subject.name }}",
+            subjectId: {{ lesson.subject.id }}
+        },
+    {% endfor %}
+];
+
+// Функция для обновления списка уроков
+function updateLessons() {
+    const classSelect = document.getElementById('class_group');
+    const lessonSelect = document.getElementById('lesson');
+    const selectedClassId = classSelect.value;
+
+    // Очищаем список уроков
+    lessonSelect.innerHTML = '<option value="">Выберите урок</option>';
+
+    if (!selectedClassId) {
+        return;
+    }
+
+    // Получаем уроки для выбранного класса
+    fetch(`/api/lessons-by-class/${selectedClassId}/`)
+        .then(response => response.json())
+        .then(data => {
+            data.lessons.forEach(lesson => {
+                const option = document.createElement('option');
+                option.value = lesson.id;
+                option.textContent = `${lesson.name} (${lesson.subject_name})`;
+                lessonSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+</script>
 {% endblock %} 

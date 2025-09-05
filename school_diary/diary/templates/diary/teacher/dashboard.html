@@ -3,77 +3,229 @@
 {% block title %}Панель учителя - Электронный дневник{% endblock %}
 
 {% block content %}
+<style>
+    /* Базовые стили для карточек */
+    .dashboard-card {
+        background-color: var(--card-bg) !important;
+        border: 1px solid var(--border-color) !important;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Стили для темной темы */
+    [data-theme="dark"] .dashboard-card {
+        background-color: #2d2d2d !important;
+        border-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .card-header {
+        background-color: #363636 !important;
+        border-bottom-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .card-body {
+        background-color: #2d2d2d !important;
+    }
+
+    [data-theme="dark"] .list-group-item {
+        background-color: #363636 !important;
+        border-color: #404040 !important;
+        color: #ffffff !important;
+    }
+
+    [data-theme="dark"] .list-group-item:hover {
+        background-color: #404040 !important;
+    }
+
+    [data-theme="dark"] h2,
+    [data-theme="dark"] h3,
+    [data-theme="dark"] h4,
+    [data-theme="dark"] p,
+    [data-theme="dark"] span:not(.badge) {
+        color: #ffffff !important;
+    }
+
+    [data-theme="dark"] .text-muted {
+        color: #cccccc !important;
+    }
+
+    /* Стили для светлой темы */
+    [data-theme="light"] .dashboard-card {
+        background-color: #ffffff !important;
+    }
+
+    [data-theme="light"] .card-header {
+        background-color: #f8f9fa !important;
+    }
+
+    [data-theme="light"] .list-group-item {
+        background-color: #ffffff !important;
+        color: #2c3e50 !important;
+    }
+
+    /* Общие стили */
+    .card-header {
+        padding: 1.2rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-header h4 {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+
+    .list-group-item {
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+        padding: 1rem;
+    }
+
+    .list-group-item:hover {
+        border-left-color: var(--primary);
+        transform: translateX(5px);
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 0.5em 1em;
+    }
+
+    .badge.bg-primary {
+        background-color: #3498db !important;
+    }
+
+    .badge.bg-info {
+        background-color: #5dade2 !important;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary {
+        background-color: #3498db !important;
+        border-color: #3498db !important;
+        color: #ffffff !important;
+    }
+
+    .btn-success {
+        background-color: #2ecc71 !important;
+        border-color: #2ecc71 !important;
+        color: #ffffff !important;
+    }
+
+    /* Анимации */
+    .animate-fade-up {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Задержки */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+</style>
+
 <div class="container mt-4">
-    <h2 class="mb-4">Панель учителя</h2>
+    <h2 class="mb-4 text-center animate-fade-up">Панель учителя</h2>
     
     <div class="row">
         <!-- Schedule Section -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
+        <div class="col-md-6">
+            <div class="card dashboard-card animate-fade-up delay-1">
                 <div class="card-header">
                     <h4>Расписание</h4>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="{% url 'view_schedule' %}" class="btn btn-primary">Просмотреть расписание</a>
+                        <a href="{% url 'view_schedule' %}" class="btn btn-primary">
+                            <i class="fas fa-calendar-alt me-2"></i>Просмотреть расписание
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Classes Section -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
+        <div class="col-md-6">
+            <div class="card dashboard-card animate-fade-up delay-2">
                 <div class="card-header">
-                    <h3 class="card-title">Мои классы</h3>
+                    <h4>Мои классы</h4>
                 </div>
                 <div class="card-body">
                     {% if classes %}
                         <div class="list-group">
                             {% for class in classes %}
                                 <a href="{% url 'view_class' class.id %}" class="list-group-item list-group-item-action">
-                                    {{ class.name }} ({{ class.year }})
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>{{ class.name }} ({{ class.year }})</span>
+                                        <span class="badge bg-primary rounded-pill">{{ class.students.count }} учеников</span>
+                                    </div>
                                 </a>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p class="text-muted">Классы не назначены.</p>
+                        <p class="text-muted text-center">Классы не назначены</p>
                     {% endif %}
                 </div>
             </div>
         </div>
 
         <!-- Subjects Section -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
+        <div class="col-md-6">
+            <div class="card dashboard-card animate-fade-up delay-3">
                 <div class="card-header">
-                    <h3 class="card-title">Мои предметы</h3>
+                    <h4>Мои предметы</h4>
                 </div>
                 <div class="card-body">
                     {% if subjects %}
                         <div class="list-group">
                             {% for subject in subjects %}
                                 <a href="{% url 'view_subject' subject.id %}" class="list-group-item list-group-item-action">
-                                    {{ subject.name }}
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>{{ subject.name }}</span>
+                                        <span class="badge bg-info rounded-pill">{{ subject.classes.count }} классов</span>
+                                    </div>
                                 </a>
                             {% endfor %}
                         </div>
                     {% else %}
-                        <p class="text-muted">Предметы не назначены.</p>
+                        <p class="text-muted text-center">Предметы не назначены</p>
                     {% endif %}
                 </div>
             </div>
         </div>
 
         <!-- Homework Section -->
-        <div class="col-md-6 mb-4">
-            <div class="card">
+        <div class="col-md-6">
+            <div class="card dashboard-card animate-fade-up delay-4">
                 <div class="card-header">
-                    <h3 class="card-title">Домашние задания</h3>
+                    <h4>Домашние задания</h4>
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
-                        <a href="{% url 'teacher_homework_list' %}" class="btn btn-success">Управлять домашними заданиями</a>
+                        <a href="{% url 'teacher_homework_list' %}" class="btn btn-success">
+                            <i class="fas fa-book me-2"></i>Управлять домашними заданиями
+                        </a>
                     </div>
                 </div>
             </div>

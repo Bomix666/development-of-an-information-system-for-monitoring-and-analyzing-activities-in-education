@@ -3,6 +3,117 @@
 {% block title %}{{ class_group.name }} - Электронный дневник{% endblock %}
 
 {% block content %}
+<style>
+    /* Стили для темной темы */
+    [data-theme="dark"] .card {
+        background-color: #2d2d2d !important;
+        border-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .card-header {
+        background-color: #363636 !important;
+        border-bottom-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .table {
+        color: #ffffff !important;
+    }
+
+    [data-theme="dark"] .table th {
+        background-color: #363636 !important;
+        color: #ffffff !important;
+        border-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .table td {
+        color: #ffffff !important;
+        border-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .text-muted {
+        color: #cccccc !important;
+    }
+
+    [data-theme="dark"] .modal-content {
+        background-color: #2d2d2d !important;
+        border-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .modal-header {
+        background-color: #363636 !important;
+        border-bottom-color: #404040 !important;
+    }
+
+    [data-theme="dark"] .modal-footer {
+        background-color: #363636 !important;
+        border-top-color: #404040 !important;
+    }
+
+    /* Общие стили */
+    .card {
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+        padding: 1.2rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table th {
+        font-weight: 600;
+        padding: 1rem;
+    }
+
+    .table td {
+        padding: 1rem;
+        vertical-align: middle;
+    }
+
+    .badge {
+        font-weight: 500;
+        padding: 0.5em 1em;
+    }
+
+    .btn-group {
+        gap: 0.5rem;
+    }
+
+    .btn {
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+    }
+
+    /* Стили для бейджей */
+    .badge.bg-primary {
+        background-color: #3498db !important;
+        color: #ffffff !important;
+    }
+
+    .badge.bg-success {
+        background-color: #2ecc71 !important;
+        color: #ffffff !important;
+    }
+
+    .badge.bg-warning {
+        background-color: #f1c40f !important;
+        color: #2c3e50 !important;
+    }
+
+    .badge.bg-danger {
+        background-color: #e74c3c !important;
+        color: #ffffff !important;
+    }
+
+    .badge.bg-info {
+        background-color: #5dade2 !important;
+        color: #ffffff !important;
+    }
+</style>
+
 <div class="container mt-4">
     <h2 class="mb-4">{{ class_group.name }} ({{ class_group.year }})</h2>
     

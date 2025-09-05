@@ -50,9 +50,9 @@ class Grade(models.Model):
 
 class Attendance(models.Model):
     STATUS_CHOICES = [
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('late', 'Late'),
+        ('present', 'Присутствует'),
+        ('absent', 'Отсутствует'),
+        ('late', 'Опоздание'),
     ]
     
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -62,7 +62,7 @@ class Attendance(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.student} - {self.subject} - {self.status}"
+        return f"{self.student} - {self.subject} - {self.get_status_display()}"
 
 class Schedule(models.Model):
     class_group = models.ForeignKey(Class, on_delete=models.CASCADE)

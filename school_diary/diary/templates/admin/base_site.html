@@ -1,0 +1,252 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+<link href="{% static 'diary/css/wow-effects.css' %}" rel="stylesheet">
+<style>
+    :root {
+        --primary: #2ecc71;
+        --secondary: #3498db;
+    }
+
+    #header {
+        background: var(--navbar-bg);
+        animation: fadeInUp 0.5s ease-out;
+        color: var(--navbar-text);
+    }
+
+    #header a:link, #header a:visited {
+        color: var(--navbar-text);
+    }
+
+    .module {
+        animation: scaleIn 0.5s ease-out;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 20px;
+        background-color: var(--card-bg);
+    }
+
+    .module:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .module h2 {
+        background: var(--navbar-bg);
+        color: var(--navbar-text);
+        padding: 15px;
+        margin: 0;
+    }
+
+    #content-related .module {
+        animation: slideInLeft 0.5s ease-out;
+    }
+
+    .submit-row {
+        animation: fadeInUp 0.5s ease-out;
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        padding: 20px;
+    }
+
+    .submit-row input {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+    .submit-row input:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    #changelist-form .actions {
+        animation: fadeInUp 0.3s ease-out;
+        background: var(--card-bg);
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        box-shadow: var(--card-shadow);
+    }
+
+    #changelist table {
+        animation: scaleIn 0.5s ease-out;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        background-color: var(--card-bg);
+        color: var(--text-primary);
+    }
+
+    #changelist table thead th {
+        background: var(--navbar-bg);
+        color: var(--navbar-text);
+    }
+
+    #changelist table tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    #changelist table tbody tr:hover {
+        transform: scale(1.01);
+        background-color: var(--table-row-hover);
+    }
+
+    .paginator {
+        animation: fadeInUp 0.5s ease-out;
+        margin-top: 20px;
+        color: var(--text-primary);
+    }
+
+    .paginator a {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 5px 10px;
+        margin: 0 3px;
+        color: var(--link-color);
+    }
+
+    .paginator a:hover {
+        background: var(--navbar-bg);
+        color: var(--navbar-text);
+        transform: translateY(-2px);
+    }
+
+    .object-tools {
+        animation: slideInLeft 0.5s ease-out;
+    }
+
+    .object-tools a {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        background: var(--navbar-bg);
+        color: var(--navbar-text);
+    }
+
+    .object-tools a:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--hover-shadow);
+    }
+
+    .form-row {
+        animation: fadeInUp 0.3s ease-out;
+        margin-bottom: 20px;
+        color: var(--text-primary);
+    }
+
+    .form-row input, .form-row select, .form-row textarea {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        border: 2px solid var(--border-color);
+        background-color: var(--input-bg);
+        color: var(--input-text);
+    }
+
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+        transform: translateY(-2px);
+        box-shadow: var(--hover-shadow);
+        border-color: var(--link-color);
+    }
+
+    .inline-group {
+        animation: scaleIn 0.5s ease-out;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 20px;
+        background-color: var(--card-bg);
+    }
+
+    .inline-group h2 {
+        background: var(--navbar-bg);
+        color: var(--navbar-text);
+        padding: 15px;
+        margin: 0;
+    }
+
+    .help {
+        animation: fadeInUp 0.3s ease-out;
+        color: var(--text-secondary);
+        font-style: italic;
+    }
+
+    .errorlist {
+        animation: slideInLeft 0.3s ease-out;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #ff6b6b;
+        color: white;
+    }
+
+    #nav-sidebar {
+        animation: slideInLeft 0.5s ease-out;
+        background-color: var(--bg-secondary);
+    }
+
+    #nav-sidebar .module {
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    #nav-sidebar a {
+        transition: all 0.3s ease;
+        color: var(--text-primary);
+    }
+
+    #nav-sidebar a:hover {
+        transform: translateX(5px);
+        background-color: var(--table-row-hover);
+        color: var(--link-hover);
+    }
+
+    /* Общие стили для админки */
+    body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+    a:link, a:visited {
+        color: var(--link-color);
+    }
+
+    a:hover {
+        color: var(--link-hover);
+    }
+
+    #content {
+        background-color: var(--bg-primary);
+    }
+
+    .theme-switcher {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <span class="icon">🎓</span> {{ site_header|default:_('Django administration') }}
+    </a>
+</h1>
+<!-- Добавляем переключатель темы -->
+<div class="theme-switcher" onclick="toggleTheme()" title="Переключить тему">
+    <span id="theme-icon">🌙</span>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block footer %}
+<script src="{% static 'diary/js/theme-switcher.js' %}"></script>
+{% endblock %} 

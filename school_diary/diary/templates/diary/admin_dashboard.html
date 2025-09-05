@@ -1,0 +1,233 @@
+{% extends 'diary/base.html' %}
+
+{% block title %}Панель администратора - Электронный дневник{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4 text-center animate-fade-up">Панель администратора</h1>
+
+    <!-- Учителя -->
+    <div class="card mb-4 animate-fade-up delay-1">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title mb-0">Учителя</h2>
+            <a href="/admin/add-teacher/" class="btn btn-primary">Добавить учителя</a>
+        </div>
+        <div class="card-body">
+            {% for teacher in teachers %}
+            <div class="teacher-card animate-scale-in delay-{{ forloop.counter }}">
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+                    <div>
+                        <h3 class="h5 mb-1">{{ teacher.user.get_full_name }}</h3>
+                        <p class="text-secondary mb-1">Логин: {{ teacher.user.username }}</p>
+                        <p class="text-secondary mb-0">
+                            Предметы: {% for subject in teacher.subjects.all %}
+                            <span class="badge bg-info">{{ subject.name }}</span>
+                            {% endfor %}
+                        </p>
+                        <p class="text-secondary mb-0">
+                            Классы: {% for class in teacher.classes.all %}
+                            <span class="badge bg-secondary">{{ class.name }}</span>
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <a href="/admin/edit-teacher/{{ teacher.id }}/" class="btn btn-warning">Редактировать</a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-secondary">Учителя не добавлены</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Ученики -->
+    <div class="card mb-4 animate-fade-up delay-2">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title mb-0">Ученики</h2>
+            <a href="/admin/add-student/" class="btn btn-primary">Добавить ученика</a>
+        </div>
+        <div class="card-body">
+            {% for class in classes %}
+            <div class="class-section animate-scale-in delay-{{ forloop.counter }}">
+                <h3 class="h4 mb-3">{{ class.name }} ({{ class.students.count }})</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ФИО</th>
+                                <th>Логин</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in class.students.all %}
+                            <tr class="animate-fade-up delay-{{ forloop.counter }}">
+                                <td>{{ student.user.get_full_name }}</td>
+                                <td>{{ student.user.username }}</td>
+                                <td>
+                                    <a href="/admin/edit-student/{{ student.id }}/" class="btn btn-warning btn-sm">Редактировать</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-secondary">В классе нет учеников</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-secondary">Классы не добавлены</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Классы -->
+    <div class="card mb-4 animate-fade-up delay-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title mb-0">Классы</h2>
+            <a href="/admin/add-class/" class="btn btn-primary">Добавить класс</a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for class in classes %}
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100 animate-scale-in delay-{{ forloop.counter }}">
+                        <div class="card-body">
+                            <h3 class="h5 mb-2">{{ class.name }}</h3>
+                            <p class="text-secondary mb-2">Учеников: {{ class.students.count }}</p>
+                            <p class="text-secondary mb-3">
+                                Предметы: {% for subject in class.subjects.all %}
+                                <span class="badge bg-info">{{ subject.name }}</span>
+                                {% endfor %}
+                            </p>
+                            <a href="/admin/edit-class/{{ class.id }}/" class="btn btn-warning btn-sm">Редактировать</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-center text-secondary">Классы не добавлены</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Предметы и уроки -->
+    <div class="card animate-fade-up delay-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="card-title mb-0">Предметы и уроки</h2>
+            <div>
+                <a href="/admin/add-subject/" class="btn btn-primary me-2">Добавить предмет</a>
+                <a href="/admin/add-lesson/" class="btn btn-primary">Добавить урок</a>
+            </div>
+        </div>
+        <div class="card-body">
+            {% for subject in subjects %}
+            <div class="subject-section mb-4 animate-scale-in delay-{{ forloop.counter }}">
+                <h3 class="h4 mb-3">{{ subject.name }}</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Класс</th>
+                                <th>Учитель</th>
+                                <th>Количество уроков</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for class in subject.classes.all %}
+                            <tr class="animate-fade-up delay-{{ forloop.counter }}">
+                                <td>{{ class.name }}</td>
+                                <td>
+                                    {% for teacher in class.teachers.all %}
+                                    {% if subject in teacher.subjects.all %}
+                                    {{ teacher.user.get_full_name }}
+                                    {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ class.lessons.filter(subject=subject).count }}</td>
+                                <td>
+                                    <a href="/admin/edit-subject-class/{{ subject.id }}/{{ class.id }}/" class="btn btn-warning btn-sm">Редактировать</a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-secondary">Предмет не назначен ни одному классу</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-secondary">Предметы не добавлены</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Дополнительные стили для админ-панели */
+    .teacher-card:hover,
+    .class-section:hover,
+    .subject-section:hover {
+        transform: translateY(-5px);
+        transition: transform 0.3s ease;
+    }
+
+    .badge {
+        transition: all 0.3s ease;
+    }
+
+    .badge:hover {
+        transform: scale(1.1);
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: var(--card-shadow);
+    }
+
+    .card:hover {
+        box-shadow: var(--hover-shadow);
+    }
+
+    .table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        transform: scale(1.01);
+        background-color: var(--table-row-hover);
+    }
+
+    /* Анимации */
+    .animate-fade-up {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    /* Задержки */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+</style>
+{% endblock %} 

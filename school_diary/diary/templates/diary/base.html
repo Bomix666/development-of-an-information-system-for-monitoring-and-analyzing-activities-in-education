@@ -1,33 +1,148 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Электронный дневник{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background: #f8f9fa; }
-    </style>
+    <meta name="theme-color" content="#ffffff">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="Электронный дневник - современная система для учета успеваемости и домашних заданий">
+    <meta name="keywords" content="электронный дневник, школа, образование, успеваемость, домашние задания">
+    <meta name="author" content="School Diary Team">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="{% block og_title %}Электронный дневник{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Современная система для учета успеваемости и домашних заданий{% endblock %}">
+    <meta property="og:type" content="website">
+    <title>{% block title %}Электронный дневник{% endblock %}</title>
+    
+    <!-- Стили -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'diary/css/wow-effects.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+
+    <!-- Скрипты -->
+    <script>
+        // Функция для отладки загрузки темы
+        function debugTheme() {
+            console.group('Отладка темы');
+            console.debug('Текущая тема:', document.documentElement.getAttribute('data-theme'));
+            console.debug('Тема в localStorage:', localStorage.getItem('theme'));
+            console.debug('Системная тема:', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            
+            // Проверка цветов текста
+            const computedStyle = getComputedStyle(document.documentElement);
+            console.debug('CSS переменные:', {
+                textPrimary: computedStyle.getPropertyValue('--text-primary'),
+                textSecondary: computedStyle.getPropertyValue('--text-secondary'),
+                bgPrimary: computedStyle.getPropertyValue('--bg-primary'),
+                bgSecondary: computedStyle.getPropertyValue('--bg-secondary'),
+                cardText: computedStyle.getPropertyValue('--card-text'),
+                tableText: computedStyle.getPropertyValue('--table-text'),
+                formText: computedStyle.getPropertyValue('--form-text')
+            });
+            
+            // Проверка контраста
+            const elements = {
+                body: document.body,
+                text: document.querySelector('p'),
+                link: document.querySelector('a'),
+                button: document.querySelector('button'),
+                input: document.querySelector('input'),
+                card: document.querySelector('.card'),
+                table: document.querySelector('.table'),
+                navbar: document.querySelector('.navbar')
+            };
+            
+            for (const [name, element] of Object.entries(elements)) {
+                if (element) {
+                    const style = window.getComputedStyle(element);
+                    console.debug(`${name}:`, {
+                        color: style.color,
+                        backgroundColor: style.backgroundColor,
+                        className: element.className
+                    });
+                }
+            }
+            
+            console.groupEnd();
+        }
+
+        // Функция для проверки контраста
+        function checkContrast(color1, color2) {
+            // Преобразование цвета в RGB
+            function getRGB(color) {
+                const temp = document.createElement('div');
+                temp.style.color = color;
+                document.body.appendChild(temp);
+                const style = window.getComputedStyle(temp);
+                const rgb = style.color.match(/\d+/g).map(Number);
+                document.body.removeChild(temp);
+                return rgb;
+            }
+            
+            // Расчет относительной яркости
+            function getLuminance(r, g, b) {
+                const [rs, gs, bs] = [r, g, b].map(c => {
+                    c = c / 255;
+                    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+                });
+                return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+            }
+            
+            const [r1, g1, b1] = getRGB(color1);
+            const [r2, g2, b2] = getRGB(color2);
+            const l1 = getLuminance(r1, g1, b1);
+            const l2 = getLuminance(r2, g2, b2);
+            const contrast = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+            
+            return contrast >= 4.5; // Минимальный контраст для WCAG AA
+        }
+    </script>
+    <script src="{% static 'diary/js/theme-switcher.js' %}" defer></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="/">Электронный дневник</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <!-- Пропуск навигации для скринридеров -->
+    <a href="#main-content" class="visually-hidden-focusable">Перейти к основному содержанию</a>
+
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-dark" role="navigation" aria-label="Основная навигация">
+        <div class="container animate-fade-up">
+            <a class="navbar-brand" href="/" aria-label="Главная страница">
+                <span class="icon" role="img" aria-label="Иконка дневника">📚</span> Электронный дневник
+            </a>
+            <div class="d-flex align-items-center">
+                <!-- Переключатель темы -->
+                <button class="theme-switcher" onclick="toggleTheme(); debugTheme();" aria-label="Переключить тему" title="Переключить тему">
+                    <span id="theme-icon" role="img" aria-hidden="true">🌙</span>
+                </button>
+                <button class="navbar-toggler ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <span class="nav-link">{{ user.get_full_name|default:user.username }}</span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout/">Выйти</a>
+                        {% if user.is_staff %}
+                            <li class="nav-item delay-1">
+                                <a class="nav-link" href="/admin/" aria-label="Перейти в админ панель">Админ панель</a>
+                            </li>
+                        {% endif %}
+                        {% if user.teacher %}
+                            <li class="nav-item delay-2">
+                                <a class="nav-link" href="/teacher/dashboard/" aria-label="Перейти в панель учителя">Панель учителя</a>
+                            </li>
+                        {% endif %}
+                        {% if user.student %}
+                            <li class="nav-item delay-2">
+                                <a class="nav-link" href="/student/dashboard/" aria-label="Перейти в панель ученика">Панель ученика</a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item delay-4">
+                            <a class="nav-link" href="/logout/" aria-label="Выйти из системы">Выход</a>
                         </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login/">Вход</a>
+                        <li class="nav-item delay-1">
+                            <a class="nav-link" href="/login/" aria-label="Войти в систему">Вход</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -35,17 +150,52 @@
         </div>
     </nav>
 
-    {% if messages %}
-        <div class="container">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
-            {% endfor %}
+    <!-- Основной контент -->
+    <main class="py-4" id="main-content" role="main">
+        <!-- Сообщения -->
+        {% if messages %}
+            <div class="container mb-4" aria-live="polite">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} animate-slide-left delay-{{ forloop.counter }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer mt-auto py-3" role="contentinfo">
+        <div class="container text-center animate-fade-up">
+            <span class="text-muted">© {% now "Y" %} Электронный дневник. Все права защищены.</span>
         </div>
-    {% endif %}
+    </footer>
 
-    {% block content %}{% endblock %}
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Отладочная информация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            debugTheme();
+            
+            // Проверка контраста для всех текстовых элементов
+            const textElements = document.querySelectorAll('body, p, span, div, h1, h2, h3, h4, h5, h6, a, button, input, select, textarea');
+            textElements.forEach(element => {
+                const style = window.getComputedStyle(element);
+                const hasGoodContrast = checkContrast(style.color, style.backgroundColor);
+                if (!hasGoodContrast) {
+                    console.warn('Низкий контраст:', {
+                        element: element.tagName + (element.className ? '.' + element.className : ''),
+                        color: style.color,
+                        backgroundColor: style.backgroundColor
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html> 

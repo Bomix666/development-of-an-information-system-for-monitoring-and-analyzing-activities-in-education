@@ -1,0 +1,747 @@
+/* Общие анимации и эффекты */
+:root {
+    /* Основные цвета */
+    --primary: #3498db;
+    --secondary: #2ecc71;
+    --accent: #e74c3c;
+    
+    /* Светлая тема (по умолчанию) */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --text-primary: #2c3e50;
+    --text-secondary: #495057;
+    --border-color: #dee2e6;
+    --card-bg: #ffffff;
+    --navbar-bg: linear-gradient(45deg, var(--primary), var(--secondary));
+    --navbar-text: #ffffff;
+    --link-color: #2980b9;
+    --link-hover: #3498db;
+    --table-header-bg: #f8f9fa;
+    --table-row-hover: #f8f9fa;
+    --input-bg: #ffffff;
+    --input-text: #2c3e50;
+    --footer-bg: #f8f9fa;
+    --footer-text: #495057;
+    --btn-text: #ffffff;
+    
+    /* Тени */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --hover-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    --card-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+/* Тёмная тема */
+[data-theme="dark"] {
+    /* Основные цвета */
+    --primary: #5dade2;
+    --secondary: #2ecc71;
+    --accent: #ff6b6b;
+    
+    /* Переопределение для темной темы */
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --border-color: #2d2d2d;
+    --card-bg: #1e1e1e;
+    --navbar-bg: linear-gradient(45deg, #2c3e50, var(--primary));
+    --navbar-text: #ffffff;
+    --link-color: #5dade2;
+    --link-hover: #3498db;
+    --table-header-bg: #1e1e1e;
+    --table-row-hover: #2d2d2d;
+    --input-bg: #2d2d2d;
+    --input-text: #ffffff;
+    --footer-bg: #1e1e1e;
+    --footer-text: #cccccc;
+    --btn-text: #ffffff;
+    
+    /* Тени для темной темы */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.4);
+    --hover-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    --card-shadow: 0 2px 15px rgba(0,0,0,0.4);
+}
+
+/* Применение цветов темы */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Улучшение читаемости текста */
+p, span, div {
+    color: var(--text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+}
+
+/* Улучшение контрастности текста */
+.text-muted {
+    color: var(--text-secondary) !important;
+    opacity: 0.9;
+}
+
+/* Улучшение контрастности ссылок */
+a {
+    color: var(--link-color);
+    transition: color 0.3s ease;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* Улучшение контрастности кнопок */
+.btn {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--btn-text);
+}
+
+.btn-primary:hover {
+    background: var(--link-hover);
+    border-color: var(--link-hover);
+}
+
+/* Улучшение контрастности форм */
+.form-control {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--border-color);
+}
+
+.form-control:focus {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--link-color);
+    box-shadow: 0 0 0 0.2rem rgba(93, 173, 226, 0.25);
+}
+
+/* Улучшение контрастности таблиц */
+.table {
+    color: var(--text-primary);
+}
+
+.table th {
+    background-color: var(--table-header-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.table td {
+    color: var(--text-primary);
+}
+
+/* Улучшение контрастности навигации */
+.navbar {
+    background: var(--navbar-bg) !important;
+    box-shadow: var(--shadow-md);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--navbar-text) !important;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    opacity: 1;
+}
+
+/* Улучшение контрастности карточек */
+.card {
+    background-color: var(--card-bg);
+    border: none;
+    box-shadow: var(--card-shadow);
+}
+
+.card-header {
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Улучшение контрастности алертов */
+.alert {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Переключатель темы */
+.theme-switcher {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--navbar-text);
+}
+
+.theme-switcher:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.theme-switcher:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Анимации */
+.animate-fade-up { animation: fadeInUp 0.5s ease-out; }
+.animate-scale-in { animation: scaleIn 0.5s ease-out; }
+.animate-slide-left { animation: slideInLeft 0.5s ease-out; }
+
+/* Задержки анимации */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* Улучшения доступности */
+:focus {
+    outline: 3px solid var(--link-color);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 3px solid var(--link-color);
+    outline-offset: 2px;
+}
+
+/* Скрытие анимаций при предпочтении уменьшенного движения */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Базовые анимации */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Карточки и контейнеры */
+.card, .panel, .box {
+    animation: scaleIn 0.5s ease-out;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.card:hover, .panel:hover, .box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+}
+
+/* Заголовки */
+.card-header, .panel-header {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 1.2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-header:before, .panel-header:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+.card:hover .card-header:before, .panel:hover .panel-header:before {
+    left: 100%;
+}
+
+/* Таблицы */
+.table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.table thead th {
+    background-color: var(--table-header-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+    border: none;
+    padding: 15px;
+}
+
+.table tbody tr {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    background-color: var(--card-bg);
+}
+
+.table tbody tr:hover {
+    transform: scale(1.01);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    background-color: var(--table-row-hover);
+}
+
+.table td {
+    padding: 15px;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Кнопки */
+.btn {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    font-weight: 500;
+    color: var(--btn-text);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
+}
+
+.btn:hover:before {
+    left: 100%;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    border: none;
+}
+
+.btn-warning {
+    color: #212529;
+}
+
+/* Бейджи */
+.badge {
+    padding: 0.6em 1em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+}
+
+.badge:hover {
+    transform: scale(1.1);
+}
+
+/* Навигация */
+.nav-item {
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    transform: translateY(-2px);
+}
+
+.nav-link {
+    position: relative;
+}
+
+.nav-link:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover:after {
+    width: 100%;
+}
+
+/* Спиннеры и лоадеры */
+.spinner-border, .spinner-grow {
+    animation-duration: 1s;
+}
+
+/* Тултипы и поповеры */
+.tooltip, .popover {
+    animation: scaleIn 0.2s ease-out;
+}
+
+/* Навигация */
+.navbar {
+    background: var(--navbar-bg) !important;
+    box-shadow: var(--shadow-md);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: var(--navbar-text) !important;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    opacity: 1;
+}
+
+/* Подвал */
+.footer {
+    background-color: var(--footer-bg) !important;
+}
+
+.footer .text-muted {
+    color: var(--footer-text) !important;
+}
+
+/* Переключатель темы */
+.theme-switcher {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--navbar-text);
+}
+
+.theme-switcher:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.theme-switcher:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Текст */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+p, span, div {
+    color: var(--text-primary);
+}
+
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+/* Ссылки */
+a {
+    color: var(--link-color);
+    transition: color 0.3s ease;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* Дополнительные эффекты */
+.hover-lift {
+    transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+}
+
+.hover-scale {
+    transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Тени */
+.shadow-hover {
+    transition: box-shadow 0.3s ease;
+}
+
+.shadow-hover:hover {
+    box-shadow: var(--hover-shadow);
+}
+
+/* Переменные для тем */
+:root[data-theme="light"] {
+    /* Основные цвета */
+    --primary: #3498db;
+    --secondary: #2ecc71;
+    --accent: #e74c3c;
+    
+    /* Фоны */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-accent: #e9ecef;
+    
+    /* Текст */
+    --text-primary: #2c3e50;
+    --text-secondary: #6c757d;
+    --text-accent: #e74c3c;
+    
+    /* Границы и тени */
+    --border-color: #dee2e6;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    
+    /* Компоненты */
+    --card-bg: #ffffff;
+    --navbar-bg: linear-gradient(45deg, var(--primary), var(--secondary));
+    --navbar-text: #ffffff;
+    --footer-bg: var(--bg-secondary);
+    --footer-text: var(--text-secondary);
+    
+    /* Кнопки */
+    --btn-primary-bg: var(--primary);
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: var(--secondary);
+    --btn-secondary-text: #ffffff;
+    
+    /* Таблицы */
+    --table-header-bg: var(--bg-secondary);
+    --table-row-hover: var(--bg-accent);
+    --table-border: var(--border-color);
+    
+    /* Формы */
+    --input-bg: #ffffff;
+    --input-border: var(--border-color);
+    --input-text: var(--text-primary);
+    --input-placeholder: var(--text-secondary);
+}
+
+:root[data-theme="dark"] {
+    /* Основные цвета */
+    --primary: #3498db;
+    --secondary: #2ecc71;
+    --accent: #e74c3c;
+    
+    /* Фоны */
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-accent: #363636;
+    
+    /* Текст */
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --text-accent: #ff6b6b;
+    
+    /* Границы и тени */
+    --border-color: #404040;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+    
+    /* Компоненты */
+    --card-bg: #2d2d2d;
+    --navbar-bg: linear-gradient(45deg, #2c3e50, var(--primary));
+    --navbar-text: #ffffff;
+    --footer-bg: var(--bg-secondary);
+    --footer-text: var(--text-secondary);
+    
+    /* Кнопки */
+    --btn-primary-bg: var(--primary);
+    --btn-primary-text: #ffffff;
+    --btn-secondary-bg: var(--secondary);
+    --btn-secondary-text: #ffffff;
+    
+    /* Таблицы */
+    --table-header-bg: var(--bg-secondary);
+    --table-row-hover: var(--bg-accent);
+    --table-border: var(--border-color);
+    
+    /* Формы */
+    --input-bg: #333333;
+    --input-border: var(--border-color);
+    --input-text: #ffffff;
+    --input-placeholder: var(--text-secondary);
+}
+
+/* Улучшения доступности */
+:focus {
+    outline: 3px solid var(--link-color);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 3px solid var(--link-color);
+    outline-offset: 2px;
+}
+
+/* Скрытие анимаций при предпочтении уменьшенного движения */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Улучшение контрастности для темной темы */
+[data-theme="dark"] {
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --link-color: #5dade2;
+    --link-hover: #3498db;
+    --card-bg: #2d2d2d;
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --border-color: #404040;
+    --input-bg: #333333;
+    --input-text: #ffffff;
+    --btn-text: #ffffff;
+    --navbar-text: #ffffff;
+    --footer-text: #b3b3b3;
+}
+
+/* Улучшение читаемости текста */
+body {
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Улучшение интерактивности кнопок */
+.btn:focus {
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Улучшение доступности форм */
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+    border-color: var(--link-color);
+}
+
+.form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* Улучшение доступности таблиц */
+.table th {
+    font-weight: 600;
+    background-color: var(--table-header-bg);
+}
+
+.table td {
+    padding: 1rem;
+}
+
+/* Улучшение доступности навигации */
+.nav-link:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+}
+
+/* Улучшение доступности модальных окон */
+.modal-content:focus {
+    outline: none;
+}
+
+.modal-header .close:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+} 

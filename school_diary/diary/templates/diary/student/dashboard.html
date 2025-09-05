@@ -3,11 +3,152 @@
 {% block title %}Панель ученика - Электронный дневник{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Панель ученика</h2>
+<style>
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        animation: slideIn 0.5s ease-out;
+    }
     
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-header {
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        color: white;
+        border: none;
+        padding: 1rem;
+    }
+    
+    .card-title {
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .table {
+        margin: 0;
+    }
+    
+    .table thead th {
+        border-top: none;
+        background-color: #f8f9fa;
+        color: #495057;
+    }
+    
+    .table td {
+        vertical-align: middle;
+    }
+    
+    .badge {
+        padding: 0.5em 0.8em;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    
+    .badge:hover {
+        transform: scale(1.1);
+    }
+    
+    .homework-row {
+        transition: all 0.2s ease;
+    }
+    
+    .homework-row:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .schedule-cell {
+        transition: all 0.2s ease;
+        padding: 10px;
+    }
+    
+    .schedule-cell:hover {
+        background-color: #f8f9fa;
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-delay-1 { animation-delay: 0.1s; }
+    .animate-delay-2 { animation-delay: 0.2s; }
+    .animate-delay-3 { animation-delay: 0.3s; }
+    .animate-delay-4 { animation-delay: 0.4s; }
+    
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,0,0,.03);
+        transform: scale(1.01);
+        transition: all 0.2s ease;
+    }
+    
+    .subject-name {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .due-date {
+        color: #e74c3c;
+        font-weight: 500;
+    }
+    
+    .teacher-name {
+        color: #7f8c8d;
+        font-style: italic;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center" style="color: #2c3e50; font-weight: 700;">Панель ученика</h2>
+    
+    <!-- Homework Section -->
+    <div class="card mb-4 animate-delay-1">
+        <div class="card-header">
+            <h3 class="card-title">Домашние задания</h3>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Предмет</th>
+                            <th>Тема</th>
+                            <th>Описание</th>
+                            <th>Срок сдачи</th>
+                            <th>Учитель</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hw in homeworks %}
+                            <tr class="homework-row">
+                                <td class="subject-name">{{ hw.lesson.subject.name }}</td>
+                                <td>{{ hw.title }}</td>
+                                <td>{{ hw.description|default:"-" }}</td>
+                                <td class="due-date">{{ hw.due_date|date:"d.m.Y" }}</td>
+                                <td class="teacher-name">{{ hw.teacher.user.get_full_name }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">Нет актуальных домашних заданий</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Weekly Schedule -->
-    <div class="card mb-4">
+    <div class="card mb-4 animate-delay-2">
         <div class="card-header">
             <h3 class="card-title">Расписание на неделю</h3>
         </div>
@@ -27,10 +168,10 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 {% for day_data in row %}
-                                    <td>
+                                    <td class="schedule-cell">
                                         {% for lesson in day_data %}
                                             <div class="mb-2">
-                                                <strong>{{ lesson.schedule.subject.name }}</strong>
+                                                <strong class="subject-name">{{ lesson.schedule.subject.name }}</strong>
                                                 {% with all_grades=lesson.schedule.subject.grade_set.all %}
                                                     {% for grade in all_grades %}
                                                         {% if grade.student.id == user.student.id and grade.date == lesson.date %}
@@ -58,13 +199,13 @@
     </div>
 
     <!-- Recent Grades -->
-    <div class="card mb-4">
+    <div class="card mb-4 animate-delay-3">
         <div class="card-header">
             <h3 class="card-title">Последние оценки</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Предмет</th>
@@ -75,13 +216,13 @@
                     <tbody>
                         {% for grade in grades %}
                             <tr>
-                                <td>{{ grade.subject.name }}</td>
-                                <td>{{ grade.value }}</td>
+                                <td class="subject-name">{{ grade.subject.name }}</td>
+                                <td><span class="badge bg-primary">{{ grade.value }}</span></td>
                                 <td>{{ grade.date|date:"d.m.Y" }}</td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="3" class="text-center">Оценок пока нет</td>
+                                <td colspan="3" class="text-center text-muted">Оценок пока нет</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -91,13 +232,13 @@
     </div>
 
     <!-- Recent Attendance -->
-    <div class="card">
+    <div class="card animate-delay-4">
         <div class="card-header">
             <h3 class="card-title">Последние посещения</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Предмет</th>
@@ -108,7 +249,7 @@
                     <tbody>
                         {% for record in attendance_list %}
                             <tr>
-                                <td>{{ record.subject.name }}</td>
+                                <td class="subject-name">{{ record.subject.name }}</td>
                                 <td>
                                     <span class="badge {% if record.status == 'present' %}bg-success{% elif record.status == 'late' %}bg-warning{% else %}bg-danger{% endif %}">
                                         {% if record.status == 'present' %}Присутствовал{% elif record.status == 'late' %}Опоздал{% else %}Отсутствовал{% endif %}
@@ -118,7 +259,7 @@
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="3" class="text-center">Нет записей о посещаемости</td>
+                                <td colspan="3" class="text-center text-muted">Нет записей о посещаемости</td>
                             </tr>
                         {% endfor %}
                     </tbody>
